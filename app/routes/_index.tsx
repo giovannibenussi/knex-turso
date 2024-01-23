@@ -1,5 +1,5 @@
 import { json, type MetaFunction } from "@remix-run/node";
-import { knexClient } from "./db.server";
+import { getKnexClient } from "./db.server";
 
 import { createClient } from "@libsql/client";
 import { useLoaderData } from "@remix-run/react";
@@ -18,7 +18,7 @@ type User = {
 export const loader = async () => {
   const result = await client.execute("SELECT * FROM users");
   const users = result.rows as unknown as User[];
-  const knexUsers: User[] = await knexClient<User[]>("users").select(
+  const knexUsers: User[] = await getKnexClient()<User[]>("users").select(
     "first_name"
   );
   return json({ ok: true, users, knexUsers });
